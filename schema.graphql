@@ -19,7 +19,7 @@ type ESRecommendationSingle {
 type ESRecommendationFilter {
   field: String!
   condition: ESFilterCondition!
-  value: String!
+  values: [String!]!
 }
 
 enum ESFilterCondition {
@@ -71,7 +71,12 @@ type Query {
   esRecommendation(id: Int!): ESRecommendation
   esRecommendations(ids: [Int!]!): [ESRecommendation!]!
   availableFields(siteId: String!): [ESField!]!
-  autocomplete(field: String!, phrase: String!, count: Int!): [String!]!
+  autocomplete(
+    siteId: String!
+    field: String!
+    phrase: String!
+    count: Int!
+  ): [String!]!
   availableSingleTemplates: [ESRecommendationSingleTemplate!]!
   availableBlockTemplates: [ESRecommendationBlockTemplate!]!
 }
@@ -90,7 +95,7 @@ input ESRecommendationSingleTemplateInput {
 input ESRecommendationFilterInput {
   field: String!
   condition: ESFilterCondition!
-  value: String!
+  values: [String!]!
 }
 
 input ESRecommendationBlockInput {
