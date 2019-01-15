@@ -1,0 +1,117 @@
+type ESRecommendation {
+  id: Int!
+  type: ESRecommendationType!
+  single: ESRecommendationSingle
+  blocks: [ESRecommendationBlock!]!
+  raw: String!
+}
+
+type ESRecommendationBlock {
+  template: ESRecommendationBlockTemplate!
+  filters: [ESRecommendationFilter!]!
+}
+
+type ESRecommendationSingle {
+  template: ESRecommendationSingleTemplate!
+  filters: [ESRecommendationFilter!]!
+}
+
+type ESRecommendationFilter {
+  field: String!
+  condition: ESFilterCondition!
+  value: String!
+}
+
+enum ESFilterCondition {
+  IS
+  ISNOT
+  IN
+  NOTIN
+  GT
+  LT
+  GTE
+  LTE
+  STARTSWITH
+  CONTAINS
+  ENDSWITH
+}
+
+type ESRecommendationSingleTemplate {
+  id: Int!
+  name: String!
+  template: String!
+}
+
+type ESRecommendationBlockTemplate {
+  id: Int!
+  name: String!
+  template: String!
+}
+
+enum ESRecommendationType {
+  SINGLE
+  BLOCKS
+  RAW
+}
+
+type ESField {
+  id: String!
+  name: String!
+  type: ESFieldType!
+  autocompleteAvailable: Bool!
+}
+
+enum ESFieldType {
+  STRING
+  FLOAT
+  BOOL
+}
+
+type Query {
+  esRecommendation(id: Int!): ESRecommendation
+  esRecommendations(ids: [Int!]!): [ESRecommendation!]!
+  availableFields(siteId: String!): [ESField!]!
+  autocomplete(field: String!, phrase: String!, count: Int!): [String!]!
+  availableSingleTemplates: [ESRecommendationSingleTemplate!]!
+  availableBlockTemplates: [ESRecommendationBlockTemplate!]!
+}
+
+input ESRecommendationSingleInput {
+  template: ESRecommendationSingleTemplateInput!
+  filters: [ESRecommendationFilterInput!]!
+}
+
+input ESRecommendationSingleTemplateInput {
+  id: Int!
+  name: String!
+  template: String!
+}
+
+input ESRecommendationFilterInput {
+  field: String!
+  condition: ESFilterCondition!
+  value: String!
+}
+
+input ESRecommendationBlockInput {
+  template: ESRecommendationBlockTemplateInput!
+  filters: [ESRecommendationFilterInput!]!
+}
+
+input ESRecommendationBlockTemplateInput {
+  id: Int!
+  name: String!
+  template: String!
+}
+
+type Mutation {
+  singleRecommendation(
+    id: Int
+    recommendation: ESRecommendationSingleInput!
+  ): ESRecommendation
+  blocksRecommendation(
+    id: Int
+    recommendation: [ESRecommendationBlockInput!]!
+  ): ESRecommendation
+  rawRecommendation(id: Int, recommendation: String!): ESRecommendation
+}
